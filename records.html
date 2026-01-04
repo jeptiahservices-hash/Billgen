@@ -20,6 +20,9 @@
         
         button { grid-column: span 1; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: background 0.3s; }
         button:hover { background-color: #218838; }
+        .print-btn { background-color: #007bff; }
+        .print-btn:hover { background-color: #0056b3; }
+
 
         table { width: 100%; border-collapse: collapse; margin-top: 30px; background: white; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
@@ -27,6 +30,17 @@
         .credit { color: #28a745; font-weight: bold; }
         .debit { color: #dc3545; font-weight: bold; }
         .rm-symbol { font-size: 0.9em; color: #888; margin-right: 2px; }
+
+        /* --- Print Specific Styles --- */
+        @media print {
+            body { background-color: white; margin: 0; padding: 0; font-size: 11pt; }
+            .container { box-shadow: none; margin: 0; padding: 0 10px; }
+            /* Hide elements not needed on the printed page */
+            .no-print { display: none !important; } 
+            h1, p.subtitle { color: black; }
+            .balance-card { background: #eee; color: black; border: 1px solid #ddd; }
+            table, th, td { border-color: #aaa !important; }
+        }
     </style>
 </head>
 <body>
@@ -39,8 +53,11 @@
         <small>Current Balance</small>
         <h2>RM <span id="totalBalance">0.00</span></h2>
     </div>
+    
+    <!-- Print Button Added Here -->
+    <button onclick="window.print()" class="print-btn no-print" style="width: 100%; margin-bottom: 20px;">Print Ledger to Sheet</button>
 
-    <form id="recordForm">
+    <form id="recordForm" class="no-print">
         <div class="form-group">
             <label for="date">Date</label>
             <input type="date" id="date" required>
@@ -131,6 +148,14 @@
 
         // Update Balance UI
         balanceDisplay.textContent = balance.toFixed(2);
+        
+        // Optional: Update balance card color based on balance sign
+        const balanceCard = document.querySelector('.balance-card');
+        if (balance < 0) {
+            balanceCard.style.backgroundColor = '#dc3545'; // Red for negative
+        } else {
+             balanceCard.style.backgroundColor = '#1a73e8'; // Blue otherwise
+        }
 
         // Reset fields (keeping the date as current)
         document.getElementById('detail').value = '';
@@ -138,3 +163,5 @@
     });
 </script>
 
+</body>
+</html>
